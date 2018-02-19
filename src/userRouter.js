@@ -3,189 +3,116 @@ const bodyParser = require('body-parser');
 const userRouter = express.Router();
 userRouter.use(bodyParser.json());
 
-//const admin = require('./firebase-admin');
 const firebase = require('./firebase-admin');
+const encryptToken = require('./shared/encryptToken');
+const Users = require('./models/users');
 
+const moment = require('moment');
+var FieldValue = require("firebase-admin").firestore.FieldValue;
 
-userRouter.route('/register')
+userRouter.route('/token')
     .all((req, res, next) => {
         res.statusCode = 200;
         res.setHeader('Content-Type', 'text/plain');
         next();
     })
     .get((req, res, next) => {
-        res.statusCode = 403;
-        res.setHeader('Content-Type', 'application/json');
-        res.end('GET operation do not support on /register');
-    })
-    .post((req, res, next) => {
-        res.statusCode = 403;
-        res.setHeader('Content-Type', 'application/json');
-        res.end('POST operation do not support on /register');
-        /*
-        if (req.body.email && req.body.password ) {
-            admin.auth().createUser({
-                email: req.body.email,
-                password: req.body.password
-            }).then((userRecord) => {
-                res.statusCode = 200;
-                res.setHeader('Content-Type', 'application/json');
-                res.json(userRecord.uid);
-            }).catch(function (error) {
-                res.statusCode = 403;
-                res.setHeader('Content-Type', 'application/json');
-                res.json('Check Your Form !');
-                next(error);
-            });
-        } else {
-            res.statusCode = 403;
-            next(error);
-        }*/
-    })
-    .put((req, res, next) => {
-        res.statusCode = 403;
-        res.setHeader('Content-Type', 'application/json');
-        res.end('PUT operation not supported on /register');
-    })
-    .delete((req, res, next) => {
-        res.statusCode = 403;
-        res.setHeader('Content-Type', 'application/json');
-        res.end('DELETE operation not supported on /register');
-    });
-
-userRouter.route('/login')
-    .all((req, res, next) => {
-        res.statusCode = 200;
-        res.setHeader('Content-Type', 'application/json');
-        next();
-    })
-    .get((req, res, next) => {
-      res.statusCode = 403;
-      res.setHeader('Content-Type', 'application/json');
-      res.end('GET operation not supported on /login');
-    })
-    .post((req, res, next) => {
-        firebase.auth().signInWithEmailAndPassword(req.body.email, req.body.password)
-            .then((result) => {
-                res.statusCode = 200;
-                res.setHeader('Content-Type', 'application/json');
-                res.json(true);
-            })
-            .catch(function (error) {
-                res.statusCode = 200;
-                res.setHeader('Content-Type', 'application/json');
-                res.json(false);
-            });
-    })
-    .put((req, res, next) => {
-        res.statusCode = 403;
-        res.setHeader('Content-Type', 'application/json');
-        res.end('PUT operation not supported on /login');
-    })
-    .delete((req, res, next) => {
-        res.statusCode = 403;
-        res.setHeader('Content-Type', 'application/json');
-        res.end('DELETE operation not supported on /login');
-    });
-
-userRouter.route('/logout')
-    .all((req, res, next) => {
-        res.statusCode = 200;
-        res.setHeader('Content-Type', 'application/json');
-        next();
-    })
-    .post((req, res, next) => {
-        res.statusCode = 403;
-        res.setHeader('Content-Type', 'application/json');
-        res.end('POST operation not supported on /logout');
-    })
-    .get((req, res, next) => {
-        firebase.auth().signOut().then(() => {
+        encryptToken(req.headers.token).then(result => {
             res.statusCode = 200;
             res.setHeader('Content-Type', 'application/json');
-            res.json(true);
-        }).catch(function (error) {
+            res.json(result);
+        }).catch(err => {
             res.statusCode = 200;
             res.setHeader('Content-Type', 'application/json');
-            res.json(false);
+            res.json(err);
         });
     })
-    .put((req, res, next) => {
-        res.statusCode = 403;
-        res.end('PUT operation not supported on /getStatus');
-    })
-    .delete((req, res, next) => {
-        res.statusCode = 403;
-        res.end('DELETE operation not supported on /getStatus');
-    });
-
-
-userRouter.route('/getStatus')
-    .all((req, res, next) => {
-        res.statusCode = 200;
-        res.setHeader('Content-Type', 'application/json');
-        next();
-    })
     .post((req, res, next) => {
         res.statusCode = 403;
         res.setHeader('Content-Type', 'application/json');
-        res.end('POST operation not supported on /getStatus');
-    })
-    .get((req, res, next) => {
-        var user = firebase.auth().currentUser || false;
-        if (user) {
-            var id = {
-                "uid":user.uid,
-                "displayName":user.displayName,
-                "photoURL":user.photoURL,
-                "email":user.email,
-                "emailVerified":user.emailVerified,
-                "phoneNumber":user.phoneNumber,
-            }
-            res.statusCode = 200;
-            res.setHeader('Content-Type', 'application/json');
-            res.json(id);
-        } else {
-            res.statusCode = 200;
-            res.setHeader('Content-Type', 'application/json');
-            res.json(null);
-        }
+        res.end('POST operation do not support on /token');
     })
     .put((req, res, next) => {
         res.statusCode = 403;
-        res.end('PUT operation not supported on /getStatus');
+        res.setHeader('Content-Type', 'application/json');
+        res.end('PUT operation not supported on /token');
     })
     .delete((req, res, next) => {
         res.statusCode = 403;
-        res.end('DELETE operation not supported on /getStatus');
+        res.setHeader('Content-Type', 'application/json');
+        res.end('DELETE operation not supported on /token');
     });
 
-userRouter.route('/getIP')
+userRouter.route('/')
     .all((req, res, next) => {
         res.statusCode = 200;
-        res.setHeader('Content-Type', 'application/json');
+        res.setHeader('Content-Type', 'text/plain');
         next();
     })
-    .post((req, res, next) => {
-        res.statusCode = 403;
-        res.setHeader('Content-Type', 'application/json');
-        res.end('POST operation not supported on /getIP');
-    })
     .get((req, res, next) => {
-        res.statusCode = 200;
-        network.get_interfaces_list(function (err, list) {
+        encryptToken(req.headers.token).then(result => {
+            Users.findOne({ uid: result.uid }).then(data => {
+                if (data !== null) {
+                    res.statusCode = 200;
+                    res.setHeader('Content-Type', 'application/json');
+                    res.json(data);
+                }
+            })
+        }).catch(err => {
+            res.statusCode = 200;
             res.setHeader('Content-Type', 'application/json');
-            res.json(list);
+            res.json(err);
+        });
+    })
+    .post((req, res, next) => {
+        Users.create({
+            uid: req.body.uid,
+            email: req.body.email,
+            name: req.body.name,
+            avatar: req.body.avatar,
+            group: 1,
+            course: [],
+            startedAt: moment(FieldValue.serverTimestamp()).unix(),
+            updatedAt: moment(FieldValue.serverTimestamp()).unix()
+        }).then(() => {
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.json({ status: true });
+        }).catch(() => {
+            Users.update(
+                { uid: req.body.uid },
+                {
+                    uid: req.body.uid,
+                    email: req.body.email,
+                    name: req.body.name,
+                    avatar: req.body.avatar,
+                    group: 1,
+                    course: [],
+                    startedAt: moment(FieldValue.serverTimestamp()).unix(),
+                    updatedAt: moment(FieldValue.serverTimestamp()).unix()
+                }
+            ).then(() => {
+                res.statusCode = 200;
+                res.setHeader('Content-Type', 'application/json');
+                res.json({ status: true });
+            }).catch(() => {
+                res.statusCode = 200;
+                res.setHeader('Content-Type', 'application/json');
+                res.json({ status: false });
+            })
         })
     })
     .put((req, res, next) => {
         res.statusCode = 403;
-        res.end('PUT operation not supported on /getStatus');
+        res.setHeader('Content-Type', 'application/json');
+        res.end('PUT operation not supported on /token');
     })
     .delete((req, res, next) => {
         res.statusCode = 403;
-        res.end('DELETE operation not supported on /getStatus');
+        res.setHeader('Content-Type', 'application/json');
+        res.end('DELETE operation not supported on /token');
     });
+
 
 
 module.exports = userRouter;

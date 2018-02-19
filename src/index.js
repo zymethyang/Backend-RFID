@@ -1,5 +1,4 @@
 require('dotenv').config()
-const admin = require('./firebase-admin');
 const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
@@ -16,9 +15,9 @@ const connect = mongoose.connect(url, {
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(cors({credentials: true, origin: '*'}));
+app.use(cors({ credentials: true, origin: '*' }));
 
-var port = process.env.PORT || 3000;
+var port = process.env.PORT || 5000;
 
 const router = require('./routes');
 const userRouter = require('./userRouter');
@@ -30,17 +29,19 @@ const realTimeRouter = require('./realtimeRouter');
 const messagingRouter = require('./messagingRouter');
 const feedbackRouter = require('./feedbackRouter');
 const errorRouter = require('./errorRouter');
+const courseRouter = require('./courseRouter');
 
 app.use('/', router);
-app.use('/temp',tempRouter);
-app.use('/humidity',humidityRouter);
-app.use('/user',userRouter);
-app.use('/bump',bumpRouter);
-app.use('/device',devicesRouter);
-app.use('/realtime',realTimeRouter);
-app.use('/messaging',messagingRouter);
-app.use('/feedback',feedbackRouter);
-app.use('/error',errorRouter);
+app.use('/temp', tempRouter);
+app.use('/humidity', humidityRouter);
+app.use('/user', userRouter);
+app.use('/bump', bumpRouter);
+app.use('/device', devicesRouter);
+app.use('/realtime', realTimeRouter);
+app.use('/messaging', messagingRouter);
+app.use('/feedback', feedbackRouter);
+app.use('/error', errorRouter);
+app.use('/course', courseRouter);
 
 app.listen(port);
 
