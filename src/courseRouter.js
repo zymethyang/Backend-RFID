@@ -23,9 +23,7 @@ coursesRouter.route('/')
     })
     .post((req, res, next) => {
         encryptToken(req.headers.token).then((users) => {
-
             var generateID = req.body.name.substring(req.body.name.length - 2) + req.body.description.substring(req.body.description.length - 2) + req.body.image.substring(req.body.image.length - 2);
-        
             Courses.create({
                 id: users.uid + generateID,
                 name: req.body.name,
@@ -98,7 +96,7 @@ coursesRouter.route('/id')
     })
     .post((req, res, next) => {
         var courses = req.body;
-        //get info user from token, make query, get courses with query. 
+        //get info user from token, make query, get courses with query.
         encryptToken(req.headers.token).then(() => {
             let query = [];
             courses.forEach(course => {
@@ -126,5 +124,35 @@ coursesRouter.route('/id')
         res.end('DELETE operation not supported on /id');
     });
 
+
+    coursesRouter.route('/add')
+        .all((req, res, next) => {
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'text/plain');
+            next();
+        })
+        .get((req, res, next) => {
+            res.statusCode = 403;
+            res.setHeader('Content-Type', 'application/json');
+            res.end('GET operation not supported on /id');
+        })
+        .post((req, res, next) => {
+            var data = req.body;
+            encryptToken(req.headers.token).then((users) => {
+                Users.findOne({uid:users.uid}).then(data=>{
+                  
+                })
+            })
+        })
+        .put((req, res, next) => {
+            res.statusCode = 403;
+            res.setHeader('Content-Type', 'application/json');
+            res.end('PUT operation not supported on /id');
+        })
+        .delete((req, res, next) => {
+            res.statusCode = 403;
+            res.setHeader('Content-Type', 'application/json');
+            res.end('DELETE operation not supported on /id');
+        });
 
 module.exports = coursesRouter;

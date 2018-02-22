@@ -5,7 +5,7 @@ module.exports = (data) => {
         admin.auth().verifyIdToken(data).then((decodedToken) => {
             resolve(decodedToken);
         })
-            .catch(() => {
+            .catch((err) => {
                 reject({
                     iss: null,
                     aud: null,
