@@ -50,6 +50,7 @@ userRouter.route('/')
         next();
     })
     .get((req, res, next) => {
+        console.log(req.headers.token);
         encryptToken(req.headers.token).then(result => {
             Users.findOne({ uid: result.uid }).then(data => {
                 if (data !== null) {

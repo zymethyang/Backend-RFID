@@ -30,6 +30,7 @@ const messagingRouter = require('./messagingRouter');
 const feedbackRouter = require('./feedbackRouter');
 const errorRouter = require('./errorRouter');
 const courseRouter = require('./courseRouter');
+const uploadRouter = require('./uploadRouter');
 
 app.use('/', router);
 app.use('/temp', tempRouter);
@@ -42,6 +43,7 @@ app.use('/messaging', messagingRouter);
 app.use('/feedback', feedbackRouter);
 app.use('/error', errorRouter);
 app.use('/course', courseRouter);
+app.use('/upload',uploadRouter);
 
 app.listen(port);
 

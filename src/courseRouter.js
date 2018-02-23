@@ -125,7 +125,7 @@ coursesRouter.route('/id')
     });
 
 
-    coursesRouter.route('/add')
+    coursesRouter.route('/add/document')
         .all((req, res, next) => {
             res.statusCode = 200;
             res.setHeader('Content-Type', 'text/plain');
@@ -137,10 +137,32 @@ coursesRouter.route('/id')
             res.end('GET operation not supported on /id');
         })
         .post((req, res, next) => {
-            var data = req.body;
             encryptToken(req.headers.token).then((users) => {
                 Users.findOne({uid:users.uid}).then(data=>{
-                  
+                  Courses.findOne({id:req.body.id}).then(course=>{
+                    var newDocument = course.document;
+                    newDocument.push({title:req.body.title,link:req.body.link});
+                    Courses.update(
+                        { id: course.id },
+                        {
+                            id: course.id,
+                            name: course.name,
+                            description: course.description,
+                            image: course.image,
+                            member: course.member,
+                            stream: [],
+                            document: newDocument,
+                            startedAt: course.startedAt,
+                            updatedAt: moment(FieldValue.serverTimestamp()).unix()
+                        }
+                    ).then(() => {
+                        res.statusCode = 200;
+                        res.setHeader('Content-Type', 'application/json');
+                        res.json({ status: true });
+                    })
+                  })
+                  console.log(req.body);
+                  console.log(data);
                 })
             })
         })

@@ -6,6 +6,7 @@ module.exports = (data) => {
             resolve(decodedToken);
         })
             .catch((err) => {
+                console.log(err);
                 reject({
                     iss: null,
                     aud: null,
