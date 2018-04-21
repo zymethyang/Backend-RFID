@@ -13,6 +13,8 @@ const connect = mongoose.connect(url, {
   useMongoClient: true,
 });
 
+
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cors({ credentials: true, origin: '*' }));
@@ -20,30 +22,23 @@ app.use(cors({ credentials: true, origin: '*' }));
 var port = process.env.PORT || 5000;
 
 const router = require('./routes');
+const eventsRouter = require('./eventRouter');
+const studentRouter = require('./studentRouter');
+/*
 const userRouter = require('./userRouter');
-const tempRouter = require('./tempRouter');
-const humidityRouter = require('./humidityRouter');
-const bumpRouter = require('./bumpRouter');
-const devicesRouter = require('./devicesRouter');
-const realTimeRouter = require('./realtimeRouter');
-const messagingRouter = require('./messagingRouter');
-const feedbackRouter = require('./feedbackRouter');
-const errorRouter = require('./errorRouter');
 const courseRouter = require('./courseRouter');
 const uploadRouter = require('./uploadRouter');
+*/
+
 
 app.use('/', router);
-app.use('/temp', tempRouter);
-app.use('/humidity', humidityRouter);
+app.use('/event', eventsRouter);
+app.use('/student', studentRouter);
+/*
 app.use('/user', userRouter);
-app.use('/bump', bumpRouter);
-app.use('/device', devicesRouter);
-app.use('/realtime', realTimeRouter);
-app.use('/messaging', messagingRouter);
-app.use('/feedback', feedbackRouter);
-app.use('/error', errorRouter);
 app.use('/course', courseRouter);
 app.use('/upload',uploadRouter);
+*/
 
 app.listen(port);
 
