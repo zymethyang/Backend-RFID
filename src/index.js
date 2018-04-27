@@ -24,21 +24,11 @@ var port = process.env.PORT || 5000;
 const router = require('./routes');
 const eventsRouter = require('./eventRouter');
 const studentRouter = require('./studentRouter');
-/*
-const userRouter = require('./userRouter');
-const courseRouter = require('./courseRouter');
-const uploadRouter = require('./uploadRouter');
-*/
 
 
 app.use('/', router);
 app.use('/event', eventsRouter);
 app.use('/student', studentRouter);
-/*
-app.use('/user', userRouter);
-app.use('/course', courseRouter);
-app.use('/upload',uploadRouter);
-*/
 
 app.listen(port);
 
